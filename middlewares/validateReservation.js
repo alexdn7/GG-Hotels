@@ -1,11 +1,16 @@
 const { PrismaClient } = require("@prisma/client");
 const { response, request } = require("express");
 const { StatusCodes } = require("http-status-codes");
+const jwt = require('jsonwebtoken');
 const prisma = new PrismaClient();
 
 const validateReservation = async (request, response, next) => {
   try {
-    const { userId, hotelId, roomId } = request.body;
+    const { hotelId, roomId } = request.body;
+    const token = request.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
+    const userId = decodedToken.id;
+    
     const reservation = request.body;
     const user = await prisma.user.findUniqueOrThrow({
       where: { id: parseInt(userId) },
