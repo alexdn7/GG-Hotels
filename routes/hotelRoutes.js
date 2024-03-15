@@ -6,13 +6,13 @@ const {
   updateHotel,
   deleteHotel,
 } = require("../controllers/HotelController");
-const { PrismaClient } = require("@prisma/client");
+const { verifyAuth,verifyAdmin } = require("../middlewares/authorization");
 const router = express.Router();
 
+router.post("/add", verifyAuth, verifyAdmin, createHotel);
 router.get("/", getAllHotels);
 router.get("/:id", getHotelById);
-router.post("/add", createHotel);
-router.put("/update/:id", updateHotel);
-router.delete("/delete/:id", deleteHotel);
+router.put("/update/:id", verifyAuth, verifyAdmin, updateHotel);
+router.delete("/delete/:id", verifyAuth, verifyAdmin, deleteHotel);
 
 module.exports = router;

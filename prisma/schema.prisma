@@ -12,7 +12,13 @@ model User {
   name String 
   email String @unique 
   password String 
+  role Role @default(USER)
   reservations Reservation[]
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 model Hotel {
@@ -35,10 +41,10 @@ model Room {
   floor Int
   max_capacity Int
   available Boolean
-  reservedOn DateTime
+  reservedOn DateTime?
   availableFrom DateTime
   hotelId Int
-  hotel Hotel @relation(fields: [hotelId], references: [id])
+  hotel Hotel @relation(fields: [hotelId], references: [id], onDelete: Cascade)
   allowPets Boolean
   offersParkingSpot Boolean
   fee Float
@@ -48,15 +54,14 @@ model Room {
 model Reservation {
   id Int @id @default(autoincrement())
   userId Int
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   hotelId Int
-  hotel Hotel @relation(fields: [hotelId], references: [id])
+  hotel Hotel @relation(fields: [hotelId], references: [id], onDelete: Cascade)
   roomId Int
-  room Room @relation(fields: [roomId], references: [id])
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
   number_of_people Int
   hasPets Boolean
   needParkingSpot Boolean
-  reservationStartDate DateTime
   reservationEndDate DateTime
   fee Float
 }

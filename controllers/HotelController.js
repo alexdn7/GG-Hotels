@@ -1,4 +1,4 @@
-const { Prisma, PrismaClient } = require("@prisma/client");
+const { PrismaClient } = require("@prisma/client");
 const { request, response } = require("express");
 const { StatusCodes } = require("http-status-codes");
 const prisma = new PrismaClient();
@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 const createHotel = async (request, response) => {
   try {
     const hotel = await prisma.hotel.create({ data: request.body });
-    response.status(StatusCodes.OK).json(hotel);
+    response.status(StatusCodes.CREATED).json(hotel);
   } catch (error) {
     response
       .status(StatusCodes.BAD_REQUEST)
@@ -26,8 +26,8 @@ const getAllHotels = async (request, response) => {
 };
 
 const getHotelById = async (request, response) => {
-  const { id } = request.params;
   try {
+    const { id } = request.params;
     const hotel = await prisma.hotel.findUniqueOrThrow({
       where: { id: parseInt(id) },
     });
@@ -63,7 +63,7 @@ const updateHotel = async (request, response) => {
 const deleteHotel = async (request, response) => {
   try {
     const { id } = request.params;
-    const hotel = await prisma.hotel.findFirstOrThrow({
+    const hotel = await prisma.hotel.findUniqueOrThrow({
       where: { id: parseInt(id) },
     });
     const deletedHotel = await prisma.hotel.delete({
