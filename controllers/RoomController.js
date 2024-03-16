@@ -1,5 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
-const { request, response } = require("express");
+const { request, response, query } = require("express");
 const { StatusCodes } = require("http-status-codes");
 const prisma = new PrismaClient();
 
@@ -22,7 +22,43 @@ const createRoom = async (request, response) => {
 
 const getAllRooms = async (request, response) => {
   try {
-    const rooms = await prisma.room.findMany();
+    const queryKeys = Object.keys(request.query);
+    const createdQuery = {};
+    let sortingCriteria;
+    let sortingDirection;
+
+    if (queryKeys.length === 0) {
+      var rooms = await prisma.room.findMany();
+    } else {
+      queryKeys.forEach((key) => {
+        if (key !== "sort" && key !== "orderBy") {
+          if (key === "hotelId") {
+            createdQuery[key] = parseInt(request.query[key]);
+          } else if (
+            ["available", "allowPets", "offersParkingSpot"].includes(key)
+          ) {
+            createdQuery[key] = request.query[key] === "true";
+          } else if (key === "fee") {
+            createdQuery[key] = parseFloat(request.query[key]);
+          } else {
+            throw new Error("Invalid parameter!");
+          }
+        } else if (key === "orderBy") {
+          sortingCriteria = request.query[key];
+        } else if (key === "sort") {
+          sortingDirection = request.query[key];
+        }
+      });
+
+      let orderByBody = sortingDirection
+        ? { [sortingCriteria]: sortingDirection }
+        : { [sortingCriteria]: "asc" };
+      var rooms = await prisma.room.findMany({
+        where: { ...createdQuery },
+        orderBy: [orderByBody],
+      });
+    }
+
     response.status(StatusCodes.OK).json(rooms);
   } catch (error) {
     response
