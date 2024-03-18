@@ -48,7 +48,7 @@
  Used for updating an existing hotel. <br>
  You must be an Admin to perform this action.  <br>
  If you're an Admin, use your Bearer Token (In Postman, click on request, open Authorization tab -> Bearer Token and insert your token).  <br>
- If you have completed the request successfully, you will receive a (200 OK) response status and, in response body, the JSON for the created hotel, otherwise you will get a specific error. <br>
+ If you have completed the request successfully, you will receive a (200 OK) response status and, in response body, the JSON for the updated hotel, otherwise you will get a specific error. <br>
 
  Request body: 
  ``` json
@@ -69,7 +69,31 @@
   Used for deleting an existing hotel. <br>
   You must be an Admin to perform this action.  <br>
   If you're an Admin, use your Bearer Token (In Postman, click on request, open Authorization tab -> Bearer Token and insert your token).  <br>
-  If you have completed the request successfully, you will receive a (200 OK) response status and, in response body, the JSON for the created hotel, otherwise you will get a specific error. <br>
+  If you have completed the request successfully, you will receive a (200 OK) response status, otherwise you will get a specific error. <br>
 
  
-  
+
+# ROOMS
+
+### POST: http://localhost:3000/rooms/add
+
+  Used for adding a new room. <br>
+  Request body: 
+ ``` json
+ {
+   "number": <Number>,
+   "floor": <Number>,
+   "max_capacity": <Number>,
+   "available": <Boolean>,
+   "hotelId": <Number>,
+   "allowPets": <Boolean>,
+   "offersParkingSpot": <Boolean>,
+   "fee": <Float>
+ }
+
+ ```
+ The other columns of the entity will be set automatically based on those provided in the request body. For example, reservedOn will be null until a reservation is made, and availableFrom will have the current date.
+
+ You must be an Admin to perform this action.  <br>
+ If you're an Admin, use your Bearer Token (In Postman, click on request, open Authorization tab -> Bearer Token and insert your token).  <br>
+ If you have completed the request successfully, you will receive a (201 CREATED) response status and, in response body, the JSON for the created room, otherwise you will get a specific error.
