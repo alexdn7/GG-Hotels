@@ -1,4 +1,36 @@
 # GG-Hotels
+  This project is the backend part for a booking application. Within it, a user can see the available hotels, their rooms and make a reservation. To make a reservation, authentication is required. The roles available on the application are: <br>
+    - USER (Has access to GET methods, has the right to modify/delete his own reservation) and <br>
+    - ADMIN (Full access to the application). <br>
+    Authentication is done using Bearer Token. <br><br>
+    
+ #### Project structure:
+  ```
+    - controllers  
+    - tests 
+    - middlewares
+    - prisma (here you can adjust database schema and see migrations)
+    - routes 
+    - utils
+    .env
+    app.js
+    test.config
+    .package-lock-json
+    .package.json
+    README.md
+ ```
+ #### First steps:
+```
+1. Clone this repository.
+2. Modify the .env file as follows:
+  - DATABASE_URL="" - insert your database connection string
+  - SECRET_KEY="" - insert one key for bcrypt.
+3. Check all routes ad add them on applications like Postman.
+4. Check documentation to see all requirements for requests (correct form, arguments, request body, etc).
+```
+#### Database schema: <br>
+![image](https://github.com/alexdn7/GG-Hotels/assets/51855097/be5d0e30-61c0-458b-bb81-2d5ab652db10)
+
 
 # Hotels
 ### POST: http://localhost:3000/hotels/add
