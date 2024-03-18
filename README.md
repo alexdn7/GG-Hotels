@@ -129,3 +129,51 @@
  You must be an Admin to perform this action.  <br>
  If you're an Admin, use your Bearer Token (In Postman, click on request, open Authorization tab -> Bearer Token and insert your token).  <br>
  If you have completed the request successfully, you will receive a (201 CREATED) response status and, in response body, the JSON for the created room, otherwise you will get a specific error.
+
+### GET: http://localhost:3000/rooms/:id
+
+  Available for all users, even not authenticated. <br>
+  Returns the room with the specified ID
+
+
+### DELETE: http://localhost:3000/rooms/delete/:id
+
+  Used for deleting an existing room. <br>
+  You must be an Admin to perform this action.  <br>
+  If you're an Admin, use your Bearer Token (In Postman, click on request, open Authorization tab -> Bearer Token and insert your token).  <br>
+  If you have completed the request successfully, you will receive a (200 OK) response status, otherwise you will get a specific error. <br>
+
+
+
+# RESERVATION
+
+### POST: http://localhost:3000/reservations/add
+
+  Used for adding a new reservations. <br>
+  Available only for authenticated users. <br>
+
+  Request body:
+  ``` json
+    {
+    "hotelId": <Number>,
+    "roomId": <Number>,
+    "number_of_people": <Number>,
+    "hasPets": <Boolean>,
+    "needParkingSpot": <Boolean>,
+    "reservationEndDate": <DateTime>
+   }  
+  ```
+  The other columns of the entity will be set automatically based on those provided in the request body. <br>
+  In addition, when a reservation is created, the Rooms and Hotel tables will also be modified.
+  
+  ```
+    In the Rooms table: - the "available" column will receive the value false
+                        - the "reservedOn" column receives the current date
+                        - the "availableFrom" column receives the value from the "reservationEndDate" field of the request
+
+    In the Hotel table: - the value of the "available_rooms" column is decremented
+  ```
+
+### DELETE: http://localhost:3000/reservations/delete/:id
+  Used for deleting an existing reservation. <br>
+  Only the user that created it or an admin can perform this operation.
