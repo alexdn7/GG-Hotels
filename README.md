@@ -93,7 +93,10 @@
     sord: <asc/desc> - sorting direction (optional, if not included, default value will be asc)
   ```
   Complete query with parameters example:  
-  http://localhost:3000/hotels?stars=3&orderBy=rating&sort=desc - will return all hotels with 3 stars, sorted by rating in descending order.
+  ```
+  http://localhost:3000/hotels?stars=3&orderBy=rating&sort=desc
+  ```
+- will return all hotels with 3 stars, sorted by rating in descending order.
 
 ### GET: http://localhost:3000/hotels/:id
 
@@ -155,10 +158,50 @@
  If you're an Admin, use your Bearer Token (In Postman, click on request, open Authorization tab -> Bearer Token and insert your token).  <br>
  If you have completed the request successfully, you will receive a (201 CREATED) response status and, in response body, the JSON for the created room, otherwise you will get a specific error.
 
+### GET: http://localhost:3000/rooms/
+  
+  Available for all users, even not authenticated. <br>
+  Returns all rooms matching your arguments. (If no arguments presented, it will return absolutely all rooms).
+  
+  Arguments:
+  ```
+    hotelId: <Number>
+    available: <Boolean>
+    allowPets: <Boolean>
+    offersParkingSpot: <Boolean>
+    fee: <Number>
+    orderBy: <Column name> - used for sorting
+    sord: <asc/desc> - sorting direction (optional, if not included, default value will be asc)
+  ```
+  Complete query with parameters example:  
+  ```
+  http://localhost:3000/rooms?hotelId=4&orderBy=fee&sort=desc
+  ```
+   - will return all rooms from Hotel with id 4, sorted by fee in descending order. 
+
 ### GET: http://localhost:3000/rooms/:id
 
   Available for all users, even not authenticated. <br>
   Returns the room with the specified ID
+
+### PUT: http://localhost:3000/rooms/update/id
+   Used for updating an existing room. <br>
+   You must be an Admin to perform this action.  <br>
+
+   ``` json
+      {
+    "number": <Number>,
+    "floor": <Number>,
+    "max_capacity": <Number>,
+    "available": <Boolean>,
+    "reservedOn": <DateTime>,
+    "availableFrom": <DateTime>,
+    "hotelId": <Number>,
+    "allowPets": <Boolean,
+    "offersParkingSpot": <Boolean>,
+    "fee": <Float>
+    }
+   ```
 
 
 ### DELETE: http://localhost:3000/rooms/delete/:id
