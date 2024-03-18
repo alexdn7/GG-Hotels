@@ -16,7 +16,49 @@ const createHotel = async (request, response) => {
 
 const getAllHotels = async (request, response) => {
   try {
-    const hotels = await prisma.hotel.findMany();
+    const queryKeys = Object.keys(request.query);
+    const createdQuery = {};
+    let sortingCriteria;
+    let sortingDirection;
+
+    if (queryKeys.length === 0) {
+      var hotels = await prisma.hotel.findMany();
+    } else {
+      queryKeys.forEach((key) => {
+        if (key !== "sort" && key !== "orderBy") {
+          if (key === "stars") {
+            createdQuery[key] = parseInt(request.query[key]);
+          } else if (
+            ["parking", "allowPets"].includes(key)
+          ) {
+            createdQuery[key] = request.query[key] === "true";
+          } else if (key === "location") {
+            createdQuery[key] = request.query[key];
+          } else {
+            throw new Error("Invalid parameter!");
+          }
+        } else if (key === "orderBy") {
+          sortingCriteria = request.query[key];
+        } else if (key === "sort") {
+          sortingDirection = request.query[key];
+        }
+      })
+
+      if (sortingCriteria) {
+        let orderByBody = sortingDirection
+          ? { [sortingCriteria]: sortingDirection }
+          : { [sortingCriteria]: "asc" };
+        var hotels = await prisma.hotel.findMany({
+          where: { ...createdQuery },
+          orderBy: [orderByBody],
+        });
+      } else {
+        var hotels = await prisma.hotel.findMany({
+          where: { ...createdQuery },
+        });
+      }
+    }
+
     response.status(StatusCodes.OK).json(hotels);
   } catch (error) {
     response
@@ -36,7 +78,6 @@ const getHotelById = async (request, response) => {
     response
       .status(StatusCodes.BAD_REQUEST)
       .json({ message: `Error fetching data: ${error}` });
-    console.error(error);
   }
 };
 

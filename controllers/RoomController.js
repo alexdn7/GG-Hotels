@@ -50,13 +50,19 @@ const getAllRooms = async (request, response) => {
         }
       });
 
-      let orderByBody = sortingDirection
-        ? { [sortingCriteria]: sortingDirection }
-        : { [sortingCriteria]: "asc" };
-      var rooms = await prisma.room.findMany({
-        where: { ...createdQuery },
-        orderBy: [orderByBody],
-      });
+      if (sortingCriteria) {
+        let orderByBody = sortingDirection
+          ? { [sortingCriteria]: sortingDirection }
+          : { [sortingCriteria]: "asc" };
+        var rooms = await prisma.room.findMany({
+          where: { ...createdQuery },
+          orderBy: [orderByBody],
+        });
+      } else {
+        var rooms = await prisma.room.findMany({
+          where: { ...createdQuery },
+        });
+      }
     }
 
     response.status(StatusCodes.OK).json(rooms);
