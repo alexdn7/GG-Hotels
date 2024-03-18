@@ -66,9 +66,16 @@ const getAllReservations = async (request, response) => {
 const getReservationById = async (request, response) => {
   try {
     const { id } = request.params;
+    const userId = parseInt(await getUserIdFromToken(request));
+    const role = await getRoleFromToken(request);
+
     const reservation = await prisma.reservation.findUniqueOrThrow({
       where: { id: parseInt(id) },
     });
+
+    if(role !== 'ADMIN' && userId !== reservation.userId) {
+      throw new Error('You are not the owner of the reservation or an Admin!');
+    }
     response.status(StatusCodes.OK).json(reservation);
   } catch (error) {
     response
@@ -80,12 +87,12 @@ const getReservationById = async (request, response) => {
 const updateReservation = async (request, response) => {
   try {
     const { id } = request.params;
+    const userId = parseInt(await getUserIdFromToken(request));
+    const role = await getRoleFromToken(request);
+
     const existingReservation = await prisma.reservation.findUniqueOrThrow({
       where: { id: parseInt(id) },
     });
-
-    const userId = parseInt(await getUserIdFromToken(request));
-    const role = await getRoleFromToken(request);
 
     if(role !== 'ADMIN' && userId !== existingReservation.userId) {
       throw new Error('You are not the owner of the reservation or an Admin!');
