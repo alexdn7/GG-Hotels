@@ -174,6 +174,25 @@
     In the Hotel table: - the value of the "available_rooms" column is decremented
   ```
 
+### GET: http://localhost:3000/reservations/
+  Returns all reservations. <br>
+  Only admins can use that.
+
+### GET: http://localhost:3000/reservations/:id
+  Returns an existing reservation. <br>
+  Only admins and user that created it can perform this action.
+
+### PATCH: http://localhost:3000/reservations/update/:id
+  Update the end date of the reservation and the fee. If you want to change data such as userId, hotelId, roomId, you need to make a new reservation (to delete the current one /delete/:id, and to add a new one, /add) <br>
+  Only admins and user that created it can perform this action. <br>
+  Request body:
+  ``` json
+    {
+    "reservationEndDate": <DateTime>
+    }
+  ```
+  Fee will be updated automatically.
+
 ### DELETE: http://localhost:3000/reservations/delete/:id
   Used for deleting an existing reservation. <br>
   Only the user that created it or an admin can perform this operation.
