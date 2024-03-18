@@ -31,6 +31,31 @@
 #### Database schema: <br>
 ![image](https://github.com/alexdn7/GG-Hotels/assets/51855097/be5d0e30-61c0-458b-bb81-2d5ab652db10)
 
+# AUTH 
+### POST: http://localhost:3000/auth/register
+  Used for creating an account.
+  Request body:
+  ``` json
+    {
+    "name": <String>,
+    "email": <String>,
+    "password": <String>
+   }
+  ```
+  It will check if already exists an user with given email. If yess, will throw an eror. <br>
+  Otherwise, it will return the authentication token. (used lately to perform some actions).
+
+### POST: http://localhost:3000/auth/login
+  Used for login.
+  Request body:
+  ``` json
+    {
+    "email": <String>,
+    "password": <String>
+   }
+  ```
+   Will return a token.
+
 
 # Hotels
 ### POST: http://localhost:3000/hotels/add
@@ -59,7 +84,7 @@
   Returns all hotels matching your arguments. (If no arguments presented, it will return absolutely all hotels).
   
   Arguments:
-  ```json
+  ```
     stars: <Number>
     parking: <Boolean>
     allowPets: <Boolean>
